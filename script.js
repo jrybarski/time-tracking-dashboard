@@ -1,3 +1,10 @@
+const elements = document.getElementsByClassName("element");
+const buttonDaily = document.querySelector(".daily");
+const buttonWeekly = document.querySelector(".weekly");
+const buttonMonthly = document.querySelector(".monthly");
+
+let timeframeData = [];
+
 async function getData() {
   try {
     const response = await fetch("data.json");
@@ -8,7 +15,18 @@ async function getData() {
     const data = await response.json();
     console.log(data);
 
-    renderTemplate(data);
+    timeframeData = data.map((element) => ({
+      title: element.title,
+      dailyCurrent: element.timeframes.daily.current,
+      dailyPrevious: element.timeframes.daily.previous,
+      weeklyCurrent: element.timeframes.weekly.current,
+      weeklyPrevious: element.timeframes.weekly.previous,
+      monthlyCurrent: element.timeframes.monthly.current,
+      monthlyPrevious: element.timeframes.monthly.previous,
+    }));
+
+    renderTemplate();
+    updateTemplate("daily");
   } catch (error) {
     console.error("Błąd podczas pobierania danych: ", error);
   }
@@ -16,33 +34,49 @@ async function getData() {
 
 getData();
 
-const elements = document.getElementsByClassName("element");
-
-function renderTemplate(data) {
-  const titleData = data.map((element) => element.title);
-
-  titleData.forEach((titleText, index) => {
+function renderTemplate() {
+  timeframeData.forEach((timeframe, index) => {
     if (elements[index]) {
       const title = document.createElement("h1");
-      title.innerHTML = titleText;
+      title.innerHTML = timeframe.title;
       elements[index].appendChild(title);
-    }
-  });
 
-  // Poprawne mapowanie dailyData
-  const dailyData = data.map((element) => ({
-    current: element.timeframes.daily.current,
-    previous: element.timeframes.daily.previous,
-  }));
+      const timeLaps = document.createElement("div");
+      timeLaps.classList.add("time-laps");
 
-  dailyData.forEach((timeframe, index) => {
-    if (elements[index]) {
-      const dailyCurrent = document.createElement("h2");
-      const dailyPrevious = document.createElement("h3");
-      dailyCurrent.innerHTML = `Current: ${timeframe.current} hrs`;
-      dailyPrevious.innerHTML = `Previous: ${timeframe.previous} hrs`;
-      elements[index].appendChild(dailyCurrent);
-      elements[index].appendChild(dailyPrevious);
+      const elementCurrent = document.createElement("h2");
+      elementCurrent.classList.add("current");
+      timeLaps.appendChild(elementCurrent);
+
+      const elementPrevious = document.createElement("h3");
+      elementPrevious.classList.add("previous");
+      timeLaps.appendChild(elementPrevious);
+
+      elements[index].appendChild(timeLaps);
     }
   });
 }
+
+function updateTemplate(view) {
+  timeframeData.forEach((timeframe, index) => {
+    if (elements[index]) {
+      const elementCurrent = elements[index].querySelector(".current");
+      const elementPrevious = elements[index].querySelector(".previous");
+
+      if (view === "daily") {
+        elementCurrent.innerHTML = `${timeframe.dailyCurrent}hrs`;
+        elementPrevious.innerHTML = `Last week - ${timeframe.dailyPrevious}hrs`;
+      } else if (view === "weekly") {
+        elementCurrent.innerHTML = `${timeframe.weeklyCurrent}hrs`;
+        elementPrevious.innerHTML = `Last week -  ${timeframe.weeklyPrevious}hrs`;
+      } else if (view === "monthly") {
+        elementCurrent.innerHTML = `${timeframe.monthlyCurrent}hrs`;
+        elementPrevious.innerHTML = `Last week - ${timeframe.monthlyPrevious}hrs`;
+      }
+    }
+  });
+}
+
+buttonDaily.addEventListener("click", () => updateTemplate("daily"));
+buttonWeekly.addEventListener("click", () => updateTemplate("weekly"));
+buttonMonthly.addEventListener("click", () => updateTemplate("monthly"));
