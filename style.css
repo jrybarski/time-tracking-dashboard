@@ -88,7 +88,10 @@ body {
 span:hover {
   cursor: pointer;
 }
-
+.active {
+  color: white;
+  opacity: 1;
+}
 .element {
   margin-top: 15px;
 }
@@ -166,11 +169,11 @@ span:hover {
   margin: 20px;
 }
 .element h2 {
-  font-size: 26px;
+  font-size: 24px;
 }
 .element h3 {
   opacity: 0.5;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .time-laps {
@@ -178,4 +181,45 @@ span:hover {
   align-items: center;
   justify-content: space-between;
   margin: 0px 20px 0px 20px;
+}
+
+@media (min-width: 100rem) {
+  .container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    width: 70%;
+    height: 50%;
+    gap: 20px;
+  }
+  .swapmode {
+    grid-column: 1;
+    grid-row: 2/3;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+  }
+  .header {
+    grid-column: 1;
+    grid-row: 1/2;
+    position: relative;
+    top: 20px;
+    display: flex;
+    flex-direction: column;
+  }
+  .avatar--img {
+    align-self: flex-start;
+    margin-left: 30px;
+    width: 65px;
+    height: 65px;
+    border: 2px solid white;
+  }
+  .daily,
+  .monthly,
+  .weekly {
+    margin-left: 30px;
+  }
+  .header--text {
+    align-items: start;
+  }
 }

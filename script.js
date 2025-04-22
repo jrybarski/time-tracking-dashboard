@@ -64,14 +64,23 @@ function updateTemplate(view) {
       const elementPrevious = elements[index].querySelector(".previous");
 
       if (view === "daily") {
+        buttonWeekly.classList.remove("active");
+        buttonMonthly.classList.remove("active");
         elementCurrent.innerHTML = `${timeframe.dailyCurrent}hrs`;
         elementPrevious.innerHTML = `Last week - ${timeframe.dailyPrevious}hrs`;
+        buttonDaily.classList.add("active");
       } else if (view === "weekly") {
+        buttonDaily.classList.remove("active");
+        buttonMonthly.classList.remove("active");
         elementCurrent.innerHTML = `${timeframe.weeklyCurrent}hrs`;
         elementPrevious.innerHTML = `Last week -  ${timeframe.weeklyPrevious}hrs`;
+        buttonWeekly.classList.add("active");
       } else if (view === "monthly") {
+        buttonWeekly.classList.remove("active");
+        buttonDaily.classList.remove("active");
         elementCurrent.innerHTML = `${timeframe.monthlyCurrent}hrs`;
         elementPrevious.innerHTML = `Last week - ${timeframe.monthlyPrevious}hrs`;
+        buttonMonthly.classList.add("active");
       }
     }
   });
